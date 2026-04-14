@@ -4,12 +4,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { LogoutLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LogOutIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const Header = () => {
     const { theme, setTheme} = useTheme();
     const isDark = theme === "dark"
+
+    const { user } = useKindeBrowserClient();
+
     return (
         <div className="border-b border-border bg-background">
             <div className="w-full px-4 lg:px-0 mx-auto max-w-6xl h-11 flex items-center justify-between">
@@ -39,16 +43,21 @@ const Header = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger>
                             <Avatar className="size-8 shrink-0 rounded-full">
-                                <AvatarImage src=""/>
+                                <AvatarImage src={user?.picture || " "}
+                                    alt={user?.given_name || " "}
+                                />
                                 <AvatarFallback className="rounded-full">
-
+                                    {user?.given_name?.charAt(0)}
+                                    {user?.family_name?.charAt(0)}
                                 </AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
                             <DropdownMenuItem>
-                                <LogOutIcon className="h-4 w-4"/>
-                                <span>Logout</span>
+                                <LogoutLink className="w-full flex items-center gap-1">
+                                    <LogOutIcon className="h-4 w-4"/>
+                                    <span>Logout</span>
+                                </LogoutLink>
                             </DropdownMenuItem>
 
                         </DropdownMenuContent>
